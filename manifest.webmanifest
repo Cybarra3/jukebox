@@ -1,0 +1,17 @@
+{
+  "name": "Pocket Jukebox",
+  "short_name": "Jukebox",
+  "description": "A mobile-first jukebox for local music and Spotify.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#10091a",
+  "theme_color": "#12091f",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
