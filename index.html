@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#12091f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Pocket Jukebox" />
+  <title>Pocket Jukebox</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="skin-neon">
+  <div id="customBackdrop" class="custom-backdrop" aria-hidden="true"></div>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">MOBILE MUSIC PLAYER</p>
+        <h1>Pocket Jukebox</h1>
+      </div>
+      <button id="skinButton" class="icon-btn" type="button" aria-label="Change jukebox skin" title="Change skin">🎨</button>
+    </header>
+
+    <section id="jukeboxSection" class="jukebox" aria-label="Jukebox player">
+      <button id="fullscreenExitButton" class="fullscreen-exit" type="button" aria-label="Exit fullscreen">✕</button>
+      <div class="jukebox-rays" aria-hidden="true"></div>
+      <div class="jukebox-sparkles" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="arch">
+        <div class="arch-lights" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+
+        <div class="display">
+          <div id="visualizer" class="visualizer paused" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <p id="sourceBadge" class="source-badge">READY</p>
+          <h2 id="trackTitle">Choose some music</h2>
+          <p id="trackArtist">Local files or Spotify</p>
+          <div class="time-row">
+            <span id="currentTime">0:00</span>
+            <input id="seekBar" type="range" min="0" max="100" value="0" aria-label="Seek" />
+            <span id="duration">0:00</span>
+          </div>
+        </div>
+
+        <div class="record-zone">
+          <div class="music-notes" aria-hidden="true">
+            <span>♪</span><span>♫</span><span>♪</span><span>♬</span>
+          </div>
+          <div id="record" class="record paused" aria-hidden="true">
+            <div class="record-ring"></div>
+            <div class="record-label">PJ</div>
+          </div>
+          <div class="now-playing-glow" aria-hidden="true"></div>
+        </div>
+
+        <div class="controls">
+          <button id="prevButton" class="control-btn secondary" type="button" aria-label="Previous track">⏮</button>
+          <button id="playButton" class="control-btn play" type="button" aria-label="Play">▶</button>
+          <button id="nextButton" class="control-btn secondary" type="button" aria-label="Next track">⏭</button>
+        </div>
+
+        <div class="volume-row">
+          <span>🔈</span>
+          <input id="volumeBar" type="range" min="0" max="1" step="0.01" value="0.85" aria-label="Volume" />
+          <span>🔊</span>
+        </div>
+
+        <button id="visualizationButton" class="visualization-btn" type="button" aria-pressed="false">
+          <span class="viz-dot" aria-hidden="true"></span>
+          <span>
+            <strong>Play Visualization</strong>
+            <small>Make the jukebox look like music is playing</small>
+          </span>
+        </button>
+      </div>
+    </section>
+
+    <section class="action-grid">
+      <button id="addMusicButton" class="action-card" type="button">
+        <strong>＋ Add Music</strong>
+        <span>Pick multiple songs from this device</span>
+      </button>
+      <button id="spotifyButton" class="action-card spotify" type="button">
+        <strong>♫ Connect Spotify</strong>
+        <span id="spotifyButtonText">Sign in and use Spotify Premium</span>
+      </button>
+    </section>
+
+    <input id="musicPicker" type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg,.flac" multiple hidden />
+
+    <section id="spotifyPanel" class="panel hidden">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">SPOTIFY</p>
+          <h2>Find a song</h2>
+        </div>
+        <button id="spotifyDisconnect" class="small-btn" type="button">Disconnect</button>
+      </div>
+      <form id="spotifySearchForm" class="search-row">
+        <input id="spotifySearchInput" type="search" autocomplete="off" placeholder="Search songs, artists, albums…" aria-label="Search Spotify" />
+        <button type="submit">Search</button>
+      </form>
+      <div id="spotifyStatus" class="status-text"></div>
+      <div id="spotifyResults" class="results"></div>
+    </section>
+
+    <section class="panel queue-panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">UP NEXT</p>
+          <h2>Your queue</h2>
+        </div>
+        <button id="clearQueueButton" class="small-btn" type="button">Clear</button>
+      </div>
+      <div id="queue" class="queue">
+        <p class="empty-state">No songs yet. Tap “Add Music” or connect Spotify.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Files you pick stay on your device. The page does not upload your local audio.</p>
+    </footer>
+  </main>
+
+  <dialog id="skinDialog" class="sheet">
+    <form method="dialog">
+      <div class="sheet-head">
+        <div>
+          <p class="eyebrow">STYLE</p>
+          <h2>Choose a jukebox skin</h2>
+        </div>
+        <button class="close-btn" value="cancel" aria-label="Close">✕</button>
+      </div>
+
+      <div class="skin-grid">
+        <button class="skin-choice neon" data-skin="neon" type="button"><span>Neon</span></button>
+        <button class="skin-choice classic" data-skin="classic" type="button"><span>Classic</span></button>
+        <button class="skin-choice chrome" data-skin="chrome" type="button"><span>Chrome</span></button>
+        <button class="skin-choice sunset" data-skin="sunset" type="button"><span>Sunset</span></button>
+      </div>
+
+      <div class="custom-skin-box">
+        <div>
+          <strong>Custom photo skin</strong>
+          <p>Choose an image from your phone. It will be cropped and styled automatically.</p>
+        </div>
+        <button id="customSkinButton" class="primary-small" type="button">Choose Photo</button>
+        <input id="skinPicker" type="file" accept="image/*" hidden />
+      </div>
+
+      <button id="removeCustomSkin" class="text-button" type="button">Remove custom photo</button>
+    </form>
+  </dialog>
+
+  <dialog id="spotifySetupDialog" class="sheet">
+    <form id="spotifySetupForm">
+      <div class="sheet-head">
+        <div>
+          <p class="eyebrow">ONE-TIME SETUP</p>
+          <h2>Connect Spotify</h2>
+        </div>
+        <button id="spotifySetupClose" class="close-btn" type="button" aria-label="Close">✕</button>
+      </div>
+      <p class="setup-copy">
+        Paste the Client ID from your Spotify Developer app. No Client Secret is needed or stored.
+      </p>
+      <label class="field-label" for="spotifyClientId">Spotify Client ID</label>
+      <input id="spotifyClientId" class="full-input" type="text" inputmode="text" autocomplete="off" placeholder="Example: a1b2c3…" required />
+      <label class="field-label" for="redirectUri">Redirect URI to add in Spotify</label>
+      <div class="copy-row">
+        <input id="redirectUri" class="full-input" type="text" readonly />
+        <button id="copyRedirect" type="button">Copy</button>
+      </div>
+      <p class="hint">Add this exact HTTPS URL to your Spotify app's Redirect URIs before signing in.</p>
+      <button class="big-primary" type="submit">Save & Sign In</button>
+    </form>
+  </dialog>
+
+  <audio id="localAudio" preload="metadata"></audio>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
